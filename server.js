@@ -1,7 +1,8 @@
-console.log("Tweets being gathered...");
 // REQUIREMENTS //
-var Twit = require('twit');
-var config = require('./config');
+var express = require('express'),
+	app = express(),
+    Twit = require('twit'),
+    config = require('./config');
 
 // GLOBAL VARIABLES //
 var T = new Twit(config);
@@ -15,7 +16,13 @@ var params = {
     // exclude_replies: true,
     count: 5
 }
-console.log("before Function: "+markovTweets);
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/views/index.html');
+});
+
+// serve js & css files
+app.use("/static", express.static("public"));
 
 // GET REQUEST //
 T.get('statuses/user_timeline', params, gotUserTweets);
@@ -34,6 +41,14 @@ function gotUserTweets(err, data, response) {
     console.log("inside Function: "+markovTweets);
     return markovTweets;
 };
-// var tweettest = gotUserTweets();
-// console.log("tweettest: "+tweettest);
-console.log("after Function: "+markovTweets);
+// console.log("after Function: "+markovTweets);
+
+
+
+
+
+
+// CONNECTED SERVER //
+app.listen(process.env.PORT || 3001, function (){
+  console.log("Server Connected to http://localhost:3001/");
+});

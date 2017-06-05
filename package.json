@@ -2,14 +2,15 @@
   "name": "markov_tweet",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node js/script.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.15.3",
     "twit": "^2.2.5"
   }
 }
