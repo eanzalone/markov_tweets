@@ -7,13 +7,20 @@ html(lang='en')
     title Markov Tweets
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
     //- STYLESHEETS
+    link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" type="text/css")
     link(rel='stylesheet', type='text/css', href='/static/css/styles.css')
   body
-    p Twitter Handle: #{twitterHandle}
-    p #{allTweets}
-
-    div#generated_tweet
-    button#generate Generate
+    h1 Genuine Tweets by
+      br
+      | @#{twitterHandle}
+    div#tweet_mockup
+      div#tweet_top
+        img(src='http://pbs.twimg.com/profile_images/856674741305753600/PLO0f0Lt_normal.jpg')
+        p
+          span.user #{userName}
+          span.handle @#{twitterHandle}
+      div#tweet_generated
+    button#generate Show me!
 
     //- APPLICATION SCRIPTS
     script(src='/static/js/script.js')

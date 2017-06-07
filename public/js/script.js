@@ -108,21 +108,21 @@ var choice = function (a) {
     return a[i];
 };
 
-var make_title = function (min_length) {
+var make_tweet = function (min_length) {
     word = choice(startwords);
-    var title = [word];
+    var tweet = [word];
     while (wordstats.hasOwnProperty(word)) {
         var next_words = wordstats[word];
         word = choice(next_words);
-        title.push(word);
-        if (title.length > min_length && terminals.hasOwnProperty(word)) break;
+        tweet.push(word);
+        if (tweet.length > min_length && terminals.hasOwnProperty(word)) break;
     }
-    if (title.length < min_length) return make_title(min_length);
-    return title.join(' ');
+    if (tweet.length < min_length) return make_tweet(min_length);
+    return tweet.join(' ');
 };
 
 $('#generate').on('click', function () {
-    var title = make_title(3 + Math.floor(3 * Math.random()));
-    $('#generated_tweet').html(title);
+    var tweet = make_tweet(3 + Math.floor(3 * Math.random()));
+    $('#tweet_generated').html(tweet);
     // limit to 140 characters?
 });
