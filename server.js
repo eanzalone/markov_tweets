@@ -13,7 +13,7 @@ var params = {
     screen_name: twitterHandle,
     lang: 'en',
     include_rts: false,
-    count: 100
+    count: 1
 }
 
 app.set('view engine', 'pug');
@@ -21,7 +21,9 @@ app.set('view engine', 'pug');
 app.get('/', function(req, res) {
     res.render('index', {
         twitterHandle: twitterHandle,
-        allTweets: T.get('statuses/user_timeline', params, gotUserTweets)
+        allTweets: T.get('statuses/user_timeline', params, gotUserTweets),
+        profileIMG: 'http://pbs.twimg.com/profile_images/856674741305753600/PLO0f0Lt_normal.jpg',
+        userName: '✨Another Rando✨'
     })
     res.sendFile(__dirname + '/views/index.html');
 });
@@ -37,6 +39,8 @@ function gotUserTweets(err, data, response) {
     // put all tweets into array
     for (var i = 0; i < data.length; i++) {
         var removeMentionsAndLinks = data[i].text.replace(/(@[^ ]+|http[s]?:\/\/[^ ]+)/g, "")
+        // console.log(data[i].user.name);
+        // console.log(data[i].user.profile_image_url);
         // TODO: take out all:
             // parenthesis
             // in-tweet quotations
@@ -47,10 +51,10 @@ function gotUserTweets(err, data, response) {
             markovStrings.push(trimmedTweet);
         }
     }
-    console.log('INSIDE FUNCTION:: ',markovStrings);
+    // console.log('INSIDE FUNCTION:: ',markovStrings);
     return markovStrings;
 };
-console.log("OUTSIDE FUNCTION:: "+markovStrings);
+// console.log("OUTSIDE FUNCTION:: "+markovStrings);
 
 
 // CONNECTED SERVER //
