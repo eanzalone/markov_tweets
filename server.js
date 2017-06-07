@@ -2,59 +2,55 @@
 var express = require('express'),
 	app = express(),
     Twit = require('twit'),
+    pug = require('pug'),
     config = require('./config');
 
 // GLOBAL VARIABLES //
 var T = new Twit(config);
 var markovStrings = [];
-var markovTweets = [];
 var twitterHandle = 'mossy_toes';
 var params = {
     screen_name: twitterHandle,
     lang: 'en',
     include_rts: false,
-    // exclude_replies: true,
-    count: 10
+    count: 100
 }
 
+app.set('view engine', 'pug');
+
 app.get('/', function(req, res) {
+    res.render('index', {
+        twitterHandle: twitterHandle,
+        allTweets: T.get('statuses/user_timeline', params, gotUserTweets)
+    })
     res.sendFile(__dirname + '/views/index.html');
 });
 
 // serve js & css files
 app.use("/static", express.static("public"));
 
-// Import the pug module
-var pug = require('pug');
-
-// Compile the template (with the data not yet inserted)
-var templateCompiler = pug.compileFile('views/index.pug');
-
-// Insert your data into the template file
-console.log(templateCompiler({ name: 'John' }));
-
 // GET REQUEST //
-// T.get('statuses/user_timeline', params, gotUserTweets);
+T.get('statuses/user_timeline', params, gotUserTweets);
 
-// FUNCTIONS //
-// function gotUserTweets(err, data, response) {
-//     // put all tweets into array
-//     for (var i = 0; i < data.length; i++) {
-//         markovStrings.push(data[i].text);
-//     }
-//     // connect all tweets to be a single string for Markov Chain
-//     var markovString = markovStrings.join(' ');
-//     // pull out all mentions and links
-//     markovTweets = markovString.replace(/(@[^ ]+|http[s]?:\/\/[^ ]+)/g, "");
+// FUNCTION //
+function gotUserTweets(err, data, response) {
+    // put all tweets into array
+    for (var i = 0; i < data.length; i++) {
+        var removeMentionsAndLinks = data[i].text.replace(/(@[^ ]+|http[s]?:\/\/[^ ]+)/g, "")
+        // TODO: take out all:
+            // parenthesis
+            // in-tweet quotations
+            // extra long tweet words ending with '…'
+        var trimmedTweet = removeMentionsAndLinks.trim();
 
-//     console.log("inside Function: "+markovTweets);
-//     return markovTweets;
-// };
-// console.log("after Function: "+markovTweets);
-
-
-
-
+        if (trimmedTweet != '') {
+            markovStrings.push(trimmedTweet);
+        }
+    }
+    console.log('INSIDE FUNCTION:: ',markovStrings);
+    return markovStrings;
+};
+console.log("OUTSIDE FUNCTION:: "+markovStrings);
 
 
 // CONNECTED SERVER //
